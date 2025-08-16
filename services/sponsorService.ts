@@ -1,4 +1,3 @@
-
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from './firebase';
 import type { Sponsor } from '../types';
@@ -16,7 +15,7 @@ export const addSponsor = async (sponsor: Omit<Sponsor, 'id'>): Promise<void> =>
   await addDoc(collection(db, SPONSORS_COLLECTION), sponsor);
 };
 
-export const updateSponsor = async (id: string, sponsor: Omit<Sponsor, 'id'>): Promise<void> => {
+export const updateSponsor = async (id: string, sponsor: Partial<Omit<Sponsor, 'id'>>): Promise<void> => {
   const sponsorDoc = doc(db, SPONSORS_COLLECTION, id);
   await updateDoc(sponsorDoc, sponsor);
 };

@@ -82,17 +82,36 @@ const App: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = async (sponsorData: Omit<Sponsor, 'id'>) => {
+  const handleFormSubmit = async (sponsorData: Partial<Omit<Sponsor, 'id'>>) => {
     try {
+      setError(null);
       if (editingSponsor && editingSponsor.id) {
         await updateSponsor(editingSponsor.id, sponsorData);
       } else {
-        await addSponsor(sponsorData);
+        const { nombre, email, estat, notas, aportacion, tipoColaboracion } = sponsorData;
+        if (!nombre || !email || !estat) {
+          const errorMessage = "El nom, l'email i l'estat són camps obligatoris.";
+          setError(errorMessage);
+          console.error(errorMessage, sponsorData);
+          return; // Stay in modal to fix data
+        }
+        
+        const newSponsor: Omit<Sponsor, 'id'> = {
+            nombre,
+            email,
+            estat,
+            notas: notas ?? '',
+            aportacion,
+            tipoColaboracion
+        };
+        await addSponsor(newSponsor);
       }
       setIsModalOpen(false);
+      setEditingSponsor(null);
       fetchSponsors(); // Refresh data
     } catch (err) {
-      setError(getFirebaseErrorMessage(err));
+      const errorMessage = getFirebaseErrorMessage(err);
+      setError(errorMessage);
       console.error(err);
     }
   };
@@ -112,10 +131,16 @@ const App: React.FC = () => {
       );
   }, [sponsors, searchTerm, filterType, filterStatus]);
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingSponsor(null);
+    setError(null);
+  }
+
   return (
     <div className="min-h-screen text-slate-800">
       <Header />
-      <main className="container mx-auto p-4 md:p-8">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Patrocinadors</h1>
@@ -136,7 +161,7 @@ const App: React.FC = () => {
           setFilterStatus={setFilterStatus}
         />
         
-        {error && <p className="text-red-500 bg-red-100 p-3 rounded-lg my-4">{error}</p>}
+        {error && !isModalOpen && <p className="text-red-500 bg-red-100 p-3 rounded-lg my-4">{error}</p>}
 
         {loading ? (
           <div className="text-center py-12">
@@ -154,12 +179,13 @@ const App: React.FC = () => {
       {isModalOpen && (
         <Modal
           title={editingSponsor ? 'Editar Patrocinador' : 'Afig Patrocinador'}
-          onClose={() => setIsModalOpen(false)}
+          onClose={closeModal}
         >
           <SponsorForm
             initialData={editingSponsor}
             onSubmit={handleFormSubmit}
-            onCancel={() => setIsModalOpen(false)}
+            onCancel={closeModal}
+            submissionError={error}
           />
         </Modal>
       )}

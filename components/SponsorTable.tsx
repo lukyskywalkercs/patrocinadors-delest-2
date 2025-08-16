@@ -62,9 +62,13 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete 
                         </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${sponsor.tipoColaboracion === 'econòmica' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}`}>
-                        {sponsor.tipoColaboracion}
-                        </span>
+                        {sponsor.tipoColaboracion ? (
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${sponsor.tipoColaboracion === 'econòmica' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}`}>
+                                {sponsor.tipoColaboracion}
+                            </span>
+                        ) : (
+                             <span className="text-sm text-slate-400">Per definir</span>
+                        )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-4">

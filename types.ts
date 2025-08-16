@@ -6,7 +6,7 @@ export interface Sponsor {
   nombre: string;
   email: string;
   aportacion?: number;
-  tipoColaboracion: TipoColaboracion;
+  tipoColaboracion?: TipoColaboracion;
   notas: string;
   estat: SponsorStatus;
 }

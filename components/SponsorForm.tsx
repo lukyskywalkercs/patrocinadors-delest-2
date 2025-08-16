@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Sponsor, TipoColaboracion, SponsorStatus } from '../types';
 import Input from './ui/Input';
 import Textarea from './ui/Textarea';
@@ -7,8 +7,9 @@ import RadioGroup from './ui/RadioGroup';
 
 interface SponsorFormProps {
   initialData?: Sponsor | null;
-  onSubmit: (data: Omit<Sponsor, 'id'>) => void;
+  onSubmit: (data: Partial<Omit<Sponsor, 'id'>>) => void;
   onCancel: () => void;
+  submissionError?: string | null;
 }
 
 const colaboracionOptions = [
@@ -26,15 +27,23 @@ const statusOptions = [
     { value: 'confirmat', title: 'Confirmat', description: 'Compromís formalitzat.' },
 ];
 
-const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCancel }) => {
+const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCancel, submissionError }) => {
   const [formData, setFormData] = useState({
     nombre: initialData?.nombre || '',
     email: initialData?.email || '',
     aportacion: initialData?.aportacion?.toString() || '',
-    tipoColaboracion: initialData?.tipoColaboracion || 'econòmica',
+    tipoColaboracion: initialData?.tipoColaboracion,
     notas: initialData?.notas || '',
     estat: initialData?.estat || 'pendent',
   });
+  
+  // When switching to confirmed, if no collab type is set, default to 'econòmica'
+  useEffect(() => {
+    if (formData.estat === 'confirmat' && !formData.tipoColaboracion) {
+        setFormData(prev => ({...prev, tipoColaboracion: 'econòmica'}));
+    }
+  }, [formData.estat, formData.tipoColaboracion]);
+
 
   const handleTipoColaboracionChange = (value: string) => {
     const newTipo = value as TipoColaboracion;
@@ -60,16 +69,21 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.tipoColaboracion === 'econòmica' && !formData.aportacion) {
-        alert("Per favor, selecciona un pla d'aportació.");
-        return;
-    }
-    const submissionData = {
-      ...formData,
-      aportacion: formData.aportacion ? parseFloat(String(formData.aportacion)) : undefined,
-      tipoColaboracion: formData.tipoColaboracion as TipoColaboracion,
-      estat: formData.estat as SponsorStatus
+    
+    const submissionData: Partial<Omit<Sponsor, 'id'>> = {
+      nombre: formData.nombre,
+      email: formData.email,
+      notas: formData.notas,
+      estat: formData.estat as SponsorStatus,
+      tipoColaboracion: formData.tipoColaboracion,
     };
+
+    if (formData.tipoColaboracion === 'econòmica') {
+      if(formData.aportacion) {
+        submissionData.aportacion = parseFloat(formData.aportacion);
+      }
+    }
+    
     onSubmit(submissionData);
   };
 
@@ -97,27 +111,31 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
         />
       </div>
       
-      <div>
-        <label className="block text-sm font-medium text-slate-700">Tipus de Col·laboració</label>
-        <RadioGroup
-          className="mt-2"
-          name="tipoColaboracion"
-          options={colaboracionOptions}
-          value={formData.tipoColaboracion}
-          onChange={handleTipoColaboracionChange}
-        />
-      </div>
+      {formData.estat === 'confirmat' && (
+        <div className="space-y-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Tipus de Col·laboració</label>
+            <RadioGroup
+              className="mt-2"
+              name="tipoColaboracion"
+              options={colaboracionOptions}
+              value={formData.tipoColaboracion!}
+              onChange={handleTipoColaboracionChange}
+            />
+          </div>
 
-      {formData.tipoColaboracion === 'econòmica' && (
-        <div>
-          <label className="block text-sm font-medium text-slate-700">Pla d'Aportació</label>
-           <RadioGroup
-            className="mt-2"
-            name="aportacion"
-            options={aportacionOptions}
-            value={formData.aportacion}
-            onChange={handleAportacionChange}
-          />
+          {formData.tipoColaboracion === 'econòmica' && (
+            <div>
+              <label className="block text-sm font-medium text-slate-700">Pla d'Aportació</label>
+              <RadioGroup
+                className="mt-2"
+                name="aportacion"
+                options={aportacionOptions}
+                value={formData.aportacion}
+                onChange={handleAportacionChange}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -125,6 +143,13 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
         <label htmlFor="notas" className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
         <Textarea id="notas" name="notas" value={formData.notas} onChange={handleChange} rows={4} />
       </div>
+
+      {submissionError && (
+        <div role="alert" className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+          <p className="text-sm font-medium">{submissionError}</p>
+        </div>
+      )}
+
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel·lar
