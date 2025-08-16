@@ -31,6 +31,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
   const [formData, setFormData] = useState({
     nombre: initialData?.nombre || '',
     email: initialData?.email || '',
+    web: initialData?.web || '',
     aportacion: initialData?.aportacion?.toString() || '',
     tipoColaboracion: initialData?.tipoColaboracion,
     notas: initialData?.notas || '',
@@ -73,6 +74,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
     const submissionData: Partial<Omit<Sponsor, 'id'>> = {
       nombre: formData.nombre,
       email: formData.email,
+      web: formData.web,
       notas: formData.notas,
       estat: formData.estat as SponsorStatus,
       tipoColaboracion: formData.tipoColaboracion,
@@ -95,9 +97,14 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
           <Input id="nombre" name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-          <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email <span className="text-slate-400 font-normal">(Opcional)</span></label>
+          <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} />
         </div>
+      </div>
+      
+      <div>
+        <label htmlFor="web" className="block text-sm font-medium text-slate-700 mb-1">Pàgina Web <span className="text-slate-400 font-normal">(Opcional)</span></label>
+        <Input id="web" name="web" type="url" placeholder="https://exemple.com" value={formData.web} onChange={handleChange} />
       </div>
 
       <div>

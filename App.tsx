@@ -88,21 +88,19 @@ const App: React.FC = () => {
       if (editingSponsor && editingSponsor.id) {
         await updateSponsor(editingSponsor.id, sponsorData);
       } else {
-        const { nombre, email, estat, notas, aportacion, tipoColaboracion } = sponsorData;
-        if (!nombre || !email || !estat) {
-          const errorMessage = "El nom, l'email i l'estat són camps obligatoris.";
+        const { nombre, estat } = sponsorData;
+        if (!nombre || !estat) {
+          const errorMessage = "El nom i l'estat són camps obligatoris.";
           setError(errorMessage);
           console.error(errorMessage, sponsorData);
           return; // Stay in modal to fix data
         }
         
         const newSponsor: Omit<Sponsor, 'id'> = {
+            ...sponsorData,
             nombre,
-            email,
             estat,
-            notas: notas ?? '',
-            aportacion,
-            tipoColaboracion
+            notas: sponsorData.notas ?? '',
         };
         await addSponsor(newSponsor);
       }

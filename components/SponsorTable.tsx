@@ -30,6 +30,7 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete 
                 <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Nom</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Web</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estat</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Aportació</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Tipus</th>
@@ -45,7 +46,21 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete 
                         <div className="text-sm font-medium text-slate-900">{sponsor.nombre}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-slate-500">{sponsor.email}</div>
+                        <div className="text-sm text-slate-500">{sponsor.email || 'N/D'}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        {sponsor.web ? (
+                            <a 
+                                href={sponsor.web.startsWith('http') ? sponsor.web : `https://${sponsor.web}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
+                            >
+                                Visitar
+                            </a>
+                        ) : (
+                            <span className="text-sm text-slate-400">N/D</span>
+                        )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${
