@@ -72,16 +72,18 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
     e.preventDefault();
     
     const submissionData: Partial<Omit<Sponsor, 'id'>> = {
-      nombre: formData.nombre,
-      email: formData.email,
-      web: formData.web,
-      notas: formData.notas,
+      nombre: formData.nombre.trim(),
+      email: formData.email.trim() || null,
+      web: formData.web.trim() || null,
+      notas: formData.notas.trim(),
       estat: formData.estat as SponsorStatus,
-      tipoColaboracion: formData.tipoColaboracion,
+      tipoColaboracion: null,
+      aportacion: null,
     };
 
-    if (formData.tipoColaboracion === 'econòmica') {
-      if(formData.aportacion) {
+    if (formData.estat === 'confirmat') {
+      submissionData.tipoColaboracion = formData.tipoColaboracion;
+      if (formData.tipoColaboracion === 'econòmica' && formData.aportacion) {
         submissionData.aportacion = parseFloat(formData.aportacion);
       }
     }

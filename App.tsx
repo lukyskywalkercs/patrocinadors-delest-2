@@ -85,25 +85,20 @@ const App: React.FC = () => {
   const handleFormSubmit = async (sponsorData: Partial<Omit<Sponsor, 'id'>>) => {
     try {
       setError(null);
+
+      // Basic validation for new sponsors
+      if (!editingSponsor && (!sponsorData.nombre || !sponsorData.estat)) {
+        const errorMessage = "El nom i l'estat són camps obligatoris.";
+        setError(errorMessage);
+        return;
+      }
+      
       if (editingSponsor && editingSponsor.id) {
         await updateSponsor(editingSponsor.id, sponsorData);
       } else {
-        const { nombre, estat } = sponsorData;
-        if (!nombre || !estat) {
-          const errorMessage = "El nom i l'estat són camps obligatoris.";
-          setError(errorMessage);
-          console.error(errorMessage, sponsorData);
-          return; // Stay in modal to fix data
-        }
-        
-        const newSponsor: Omit<Sponsor, 'id'> = {
-            ...sponsorData,
-            nombre,
-            estat,
-            notas: sponsorData.notas ?? '',
-        };
-        await addSponsor(newSponsor);
+        await addSponsor(sponsorData as Omit<Sponsor, 'id'>);
       }
+
       setIsModalOpen(false);
       setEditingSponsor(null);
       fetchSponsors(); // Refresh data
