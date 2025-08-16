@@ -1,5 +1,6 @@
 export type TipoColaboracion = 'econòmica' | 'difusió';
 export type SponsorStatus = 'confirmat' | 'pendent' | 'refusat';
+export type ContactMethod = 'email' | 'telèfon' | 'formulari web' | 'presencialment';
 
 export interface Sponsor {
   id: string;
@@ -10,4 +11,5 @@ export interface Sponsor {
   tipoColaboracion?: TipoColaboracion | null;
   notas: string;
   estat: SponsorStatus;
+  contactMethods?: ContactMethod[] | null;
 }

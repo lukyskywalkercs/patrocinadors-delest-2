@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Sponsor, TipoColaboracion, SponsorStatus } from '../types';
+import type { Sponsor, TipoColaboracion, SponsorStatus, ContactMethod } from '../types';
 import Input from './ui/Input';
 import Textarea from './ui/Textarea';
 import Button from './ui/Button';
@@ -28,6 +28,13 @@ const statusOptions = [
     { value: 'refusat', title: 'Refusat', description: 'Ha declinat el patrocini.' },
 ];
 
+const contactMethodOptions: { id: ContactMethod, label: string }[] = [
+    { id: 'email', label: 'Email' },
+    { id: 'telèfon', label: 'Telèfon' },
+    { id: 'formulari web', label: 'Formulari Web' },
+    { id: 'presencialment', label: 'Presencialment' },
+];
+
 const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCancel, submissionError }) => {
   const [formData, setFormData] = useState({
     nombre: initialData?.nombre || '',
@@ -37,6 +44,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
     tipoColaboracion: initialData?.tipoColaboracion,
     notas: initialData?.notas || '',
     estat: initialData?.estat || 'pendent',
+    contactMethods: initialData?.contactMethods || [],
   });
   
   // When switching to confirmed, if no collab type is set, default to 'econòmica'
@@ -68,6 +76,15 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+  
+  const handleContactMethodChange = (method: ContactMethod) => {
+    setFormData(prev => {
+        const newMethods = prev.contactMethods.includes(method)
+            ? prev.contactMethods.filter(m => m !== method)
+            : [...prev.contactMethods, method];
+        return { ...prev, contactMethods: newMethods };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +97,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
       estat: formData.estat as SponsorStatus,
       tipoColaboracion: null,
       aportacion: null,
+      contactMethods: formData.contactMethods,
     };
 
     if (formData.estat === 'confirmat') {
@@ -108,6 +126,23 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
       <div>
         <label htmlFor="web" className="block text-sm font-medium text-slate-700 mb-1">Pàgina Web <span className="text-slate-400 font-normal">(Opcional)</span></label>
         <Input id="web" name="web" type="url" placeholder="https://exemple.com" value={formData.web} onChange={handleChange} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">Mètodes de Contacte</label>
+        <div className="grid grid-cols-2 gap-3">
+          {contactMethodOptions.map((method) => (
+            <label key={method.id} className="flex items-center space-x-3 bg-white border border-slate-200 rounded-lg p-3 cursor-pointer hover:bg-slate-50 transition-colors">
+              <input
+                type="checkbox"
+                checked={formData.contactMethods.includes(method.id)}
+                onChange={() => handleContactMethodChange(method.id)}
+                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              />
+              <span className="text-sm font-medium text-slate-700 capitalize">{method.label}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       <div>
