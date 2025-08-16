@@ -33,6 +33,8 @@ const contactMethodOptions: { id: ContactMethod, label: string }[] = [
     { id: 'telèfon', label: 'Telèfon' },
     { id: 'formulari web', label: 'Formulari Web' },
     { id: 'presencialment', label: 'Presencialment' },
+    { id: 'xarxes socials', label: 'Xarxes Socials' },
+    { id: 'whatsapp', label: 'Whatsapp' },
 ];
 
 const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCancel, submissionError }) => {
@@ -130,7 +132,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
 
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-2">Mètodes de Contacte</label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {contactMethodOptions.map((method) => (
             <label key={method.id} className="flex items-center space-x-3 bg-white border border-slate-200 rounded-lg p-3 cursor-pointer hover:bg-slate-50 transition-colors">
               <input

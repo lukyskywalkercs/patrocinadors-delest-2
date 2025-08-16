@@ -1,6 +1,6 @@
 export type TipoColaboracion = 'econòmica' | 'difusió';
 export type SponsorStatus = 'confirmat' | 'pendent' | 'refusat';
-export type ContactMethod = 'email' | 'telèfon' | 'formulari web' | 'presencialment';
+export type ContactMethod = 'email' | 'telèfon' | 'formulari web' | 'presencialment' | 'xarxes socials' | 'whatsapp';
 
 export interface Sponsor {
   id: string;
