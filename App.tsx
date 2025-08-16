@@ -71,10 +71,22 @@ const App: React.FC = () => {
   };
 
   const handleDeleteSponsor = async (id: string) => {
-    if (window.confirm('Estàs segur que vols eliminar este patrocinador?')) {
+    if (window.confirm('Estàs segur que vols eliminar este patrocinador? Aquesta acció és permanent.')) {
       try {
         await deleteSponsor(id);
         setSponsors(prev => prev.filter(s => s.id !== id));
+      } catch (err) {
+        setError(getFirebaseErrorMessage(err));
+        console.error(err);
+      }
+    }
+  };
+
+  const handleRefuseSponsor = async (id: string) => {
+    if (window.confirm('Estàs segur que vols marcar este patrocinador com a refusat? Aquesta acció es pot desfer editant-lo.')) {
+      try {
+        await updateSponsor(id, { estat: 'refusat', tipoColaboracion: null, aportacion: null });
+        fetchSponsors();
       } catch (err) {
         setError(getFirebaseErrorMessage(err));
         console.error(err);
@@ -165,6 +177,7 @@ const App: React.FC = () => {
             sponsors={filteredSponsors}
             onEdit={handleEditSponsor}
             onDelete={handleDeleteSponsor}
+            onRefuse={handleRefuseSponsor}
           />
         )}
       </main>

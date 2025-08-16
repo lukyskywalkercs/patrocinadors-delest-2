@@ -25,6 +25,7 @@ const aportacionOptions = [
 const statusOptions = [
     { value: 'pendent', title: 'Pendent', description: 'Encara no confirmat.' },
     { value: 'confirmat', title: 'Confirmat', description: 'Compromís formalitzat.' },
+    { value: 'refusat', title: 'Refusat', description: 'Ha declinat el patrocini.' },
 ];
 
 const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCancel, submissionError }) => {

@@ -2,15 +2,31 @@ import React from 'react';
 import type { Sponsor } from '../types';
 import { EditIcon } from './icons/EditIcon';
 import { DeleteIcon } from './icons/DeleteIcon';
+import { RefuseIcon } from './icons/RefuseIcon';
 import Card from './ui/Card';
 
 interface SponsorTableProps {
   sponsors: Sponsor[];
   onEdit: (sponsor: Sponsor) => void;
   onDelete: (id: string) => void;
+  onRefuse: (id: string) => void;
 }
 
-const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete }) => {
+const getStatusClasses = (status: Sponsor['estat']) => {
+    switch (status) {
+        case 'confirmat':
+            return 'bg-green-100 text-green-800';
+        case 'pendent':
+            return 'bg-yellow-100 text-yellow-800';
+        case 'refusat':
+            return 'bg-red-100 text-red-800';
+        default:
+            return 'bg-slate-100 text-slate-800';
+    }
+};
+
+
+const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete, onRefuse }) => {
   if (sponsors.length === 0) {
     return (
       <Card>
@@ -63,12 +79,8 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete 
                         )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${
-                            sponsor.estat === 'confirmat' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                        {sponsor.estat}
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${getStatusClasses(sponsor.estat)}`}>
+                            {sponsor.estat}
                         </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -87,10 +99,15 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete 
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-4">
-                        <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors">
+                        {sponsor.estat !== 'refusat' && (
+                            <button onClick={() => onRefuse(sponsor.id)} className="text-slate-500 hover:text-orange-600 transition-colors" title="Marcar com a refusat">
+                                <RefuseIcon className="w-5 h-5" />
+                            </button>
+                        )}
+                        <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors" title="Editar patrocinador">
                             <EditIcon className="w-5 h-5" />
                         </button>
-                        <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors">
+                        <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors" title="Eliminar patrocinador">
                             <DeleteIcon className="w-5 h-5" />
                         </button>
                         </div>
