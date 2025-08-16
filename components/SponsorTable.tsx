@@ -14,6 +14,8 @@ interface SponsorTableProps {
 
 const getStatusClasses = (status: Sponsor['estat']) => {
     switch (status) {
+        case 'proposta':
+            return 'bg-indigo-100 text-indigo-800';
         case 'confirmat':
             return 'bg-green-100 text-green-800';
         case 'pendent':

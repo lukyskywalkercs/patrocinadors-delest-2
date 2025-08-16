@@ -1,5 +1,5 @@
 export type TipoColaboracion = 'econòmica' | 'difusió';
-export type SponsorStatus = 'confirmat' | 'pendent' | 'refusat';
+export type SponsorStatus = 'proposta' | 'pendent' | 'confirmat' | 'refusat';
 export type ContactMethod = 'email' | 'telèfon' | 'formulari web' | 'presencialment' | 'xarxes socials' | 'whatsapp';
 
 export interface Sponsor {

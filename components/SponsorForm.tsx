@@ -23,7 +23,8 @@ const aportacionOptions = [
 ];
 
 const statusOptions = [
-    { value: 'pendent', title: 'Pendent', description: 'Encara no confirmat.' },
+    { value: 'proposta', title: 'Proposta', description: 'Idea per a contactar.' },
+    { value: 'pendent', title: 'Pendent', description: 'Contactat, esperant resposta.' },
     { value: 'confirmat', title: 'Confirmat', description: 'Compromís formalitzat.' },
     { value: 'refusat', title: 'Refusat', description: 'Ha declinat el patrocini.' },
 ];
@@ -45,7 +46,7 @@ const SponsorForm: React.FC<SponsorFormProps> = ({ initialData, onSubmit, onCanc
     aportacion: initialData?.aportacion?.toString() || '',
     tipoColaboracion: initialData?.tipoColaboracion,
     notas: initialData?.notas || '',
-    estat: initialData?.estat || 'pendent',
+    estat: initialData?.estat || 'proposta',
     contactMethods: initialData?.contactMethods || [],
   });
   

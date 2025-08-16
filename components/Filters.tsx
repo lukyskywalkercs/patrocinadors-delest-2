@@ -21,8 +21,9 @@ const typeFilterOptions = [
 
 const statusFilterOptions = [
     { label: 'Tots', value: 'tots' },
-    { label: 'Confirmats', value: 'confirmat' },
+    { label: 'Propostes', value: 'proposta' },
     { label: 'Pendents', value: 'pendent' },
+    { label: 'Confirmats', value: 'confirmat' },
     { label: 'Refusats', value: 'refusat' },
   ];
 
