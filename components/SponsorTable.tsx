@@ -41,46 +41,35 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
   }
 
   return (
-    <div className="overflow-x-auto">
-        <div className="min-w-full bg-white rounded-xl border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200">
-                <thead className="bg-slate-50">
-                <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/3">Patrocinador</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estat</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Col·laboració</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacte</th>
-                    <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Accions</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-slate-200">
-                {sponsors.map((sponsor) => (
-                    <tr key={sponsor.id} className="hover:bg-slate-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-col">
-                            <div className="text-sm font-medium text-slate-900">{sponsor.nombre}</div>
-                            <div className="text-sm text-slate-500">{sponsor.email || ''}</div>
-                            {sponsor.web && (
-                                <a 
-                                    href={sponsor.web.startsWith('http') ? sponsor.web : `https://${sponsor.web}`} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline mt-1"
-                                >
-                                    Visitar Web
-                                </a>
-                            )}
-                        </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${getStatusClasses(sponsor.estat)}`}>
-                            {sponsor.estat}
-                        </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                       {sponsor.tipoColaboracion ? (
+    <>
+        {/* Mobile View: Card List */}
+        <div className="md:hidden space-y-4">
+            {sponsors.map((sponsor) => (
+            <Card key={sponsor.id} className="p-4">
+                <div className="flex justify-between items-start mb-4">
+                    <div className="flex-1">
+                        <h3 className="text-lg font-bold text-slate-900">{sponsor.nombre}</h3>
+                        <p className="text-sm text-slate-500">{sponsor.email || ''}</p>
+                         {sponsor.web && (
+                            <a 
+                                href={sponsor.web.startsWith('http') ? sponsor.web : `https://${sponsor.web}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline mt-1 block"
+                            >
+                                Visitar Web
+                            </a>
+                        )}
+                    </div>
+                    <span className={`flex-shrink-0 ml-4 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${getStatusClasses(sponsor.estat)}`}>
+                        {sponsor.estat}
+                    </span>
+                </div>
+
+                <div className="space-y-4 text-sm border-t border-slate-200 pt-4">
+                    <div>
+                        <h4 className="font-semibold text-slate-600 mb-1 text-xs uppercase tracking-wider">Col·laboració</h4>
+                        {sponsor.tipoColaboracion ? (
                             <div className="flex flex-col items-start">
                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${sponsor.tipoColaboracion === 'econòmica' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}`}>
                                     {sponsor.tipoColaboracion}
@@ -94,37 +83,125 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
                         ) : (
                              <span className="text-sm text-slate-400">Per definir</span>
                         )}
-                    </td>
-                     <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-wrap gap-1 max-w-xs">
-                            {sponsor.contactMethods && sponsor.contactMethods.map(method => (
-                                <span key={method} className="px-2 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full capitalize bg-slate-100 text-slate-700">
-                                    {method}
-                                </span>
-                            ))}
+                    </div>
+
+                    {sponsor.contactMethods && sponsor.contactMethods.length > 0 && (
+                        <div>
+                            <h4 className="font-semibold text-slate-600 mb-2 text-xs uppercase tracking-wider">Contactat via</h4>
+                            <div className="flex flex-wrap gap-1">
+                                {sponsor.contactMethods.map(method => (
+                                    <span key={method} className="px-2 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full capitalize bg-slate-100 text-slate-700">
+                                        {method}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-4">
-                        {sponsor.estat !== 'refusat' && (
-                            <button onClick={() => onRefuse(sponsor.id)} className="text-slate-500 hover:text-orange-600 transition-colors" title="Marcar com a refusat">
-                                <RefuseIcon className="w-5 h-5" />
-                            </button>
-                        )}
-                        <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors" title="Editar patrocinador">
-                            <EditIcon className="w-5 h-5" />
+                    )}
+                </div>
+
+                <div className="flex items-center justify-end space-x-4 pt-4 mt-4 border-t border-slate-200">
+                    {sponsor.estat !== 'refusat' && (
+                        <button onClick={() => onRefuse(sponsor.id)} className="text-slate-500 hover:text-orange-600 transition-colors" title="Marcar com a refusat">
+                            <RefuseIcon className="w-5 h-5" />
                         </button>
-                        <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors" title="Eliminar patrocinador">
-                            <DeleteIcon className="w-5 h-5" />
-                        </button>
-                        </div>
-                    </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+                    )}
+                    <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors" title="Editar patrocinador">
+                        <EditIcon className="w-5 h-5" />
+                    </button>
+                    <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors" title="Eliminar patrocinador">
+                        <DeleteIcon className="w-5 h-5" />
+                    </button>
+                </div>
+            </Card>
+            ))}
         </div>
-    </div>
+
+        {/* Desktop View: Table */}
+        <div className="hidden md:block overflow-x-auto">
+            <div className="min-w-full bg-white rounded-xl border border-slate-200">
+                <table className="min-w-full divide-y divide-slate-200">
+                    <thead className="bg-slate-50">
+                    <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/3">Patrocinador</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estat</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Col·laboració</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacte</th>
+                        <th scope="col" className="relative px-6 py-3">
+                        <span className="sr-only">Accions</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-slate-200">
+                    {sponsors.map((sponsor) => (
+                        <tr key={sponsor.id} className="hover:bg-slate-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-col">
+                                <div className="text-sm font-medium text-slate-900">{sponsor.nombre}</div>
+                                <div className="text-sm text-slate-500">{sponsor.email || ''}</div>
+                                {sponsor.web && (
+                                    <a 
+                                        href={sponsor.web.startsWith('http') ? sponsor.web : `https://${sponsor.web}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline mt-1"
+                                    >
+                                        Visitar Web
+                                    </a>
+                                )}
+                            </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${getStatusClasses(sponsor.estat)}`}>
+                                {sponsor.estat}
+                            </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                        {sponsor.tipoColaboracion ? (
+                                <div className="flex flex-col items-start">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${sponsor.tipoColaboracion === 'econòmica' ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}`}>
+                                        {sponsor.tipoColaboracion}
+                                    </span>
+                                    {sponsor.aportacion && (
+                                        <div className="text-sm text-slate-500 mt-1">
+                                            {sponsor.aportacion.toLocaleString('es-ES')} €
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <span className="text-sm text-slate-400">Per definir</span>
+                            )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-wrap gap-1 max-w-xs">
+                                {sponsor.contactMethods && sponsor.contactMethods.map(method => (
+                                    <span key={method} className="px-2 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full capitalize bg-slate-100 text-slate-700">
+                                        {method}
+                                    </span>
+                                ))}
+                            </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex items-center justify-end space-x-4">
+                            {sponsor.estat !== 'refusat' && (
+                                <button onClick={() => onRefuse(sponsor.id)} className="text-slate-500 hover:text-orange-600 transition-colors" title="Marcar com a refusat">
+                                    <RefuseIcon className="w-5 h-5" />
+                                </button>
+                            )}
+                            <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors" title="Editar patrocinador">
+                                <EditIcon className="w-5 h-5" />
+                            </button>
+                            <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors" title="Eliminar patrocinador">
+                                <DeleteIcon className="w-5 h-5" />
+                            </button>
+                            </div>
+                        </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </>
   );
 };
 
