@@ -21,6 +21,25 @@ const Instructions: React.FC = () => {
             <strong>Filtrar i buscar:</strong> Utilitza els controls de cerca i els filtres per a localitzar ràpidament els patrocinadors per nom, tipus de col·laboració o estat.
           </li>
         </ul>
+
+        <div>
+            <h3 className="font-semibold text-slate-700 mt-4 mb-2">Què significa cada Estat?</h3>
+            <ul className="list-disc list-inside space-y-1">
+                <li><span className="font-semibold">Proposta:</span> Una empresa o contacte que tenim pendent contactar.</li>
+                <li><span className="font-semibold">Pendent:</span> Ja s'ha contactat i estem esperant una resposta.</li>
+                <li><span className="font-semibold">Confirmat:</span> El patrocini ha sigut acceptat i formalitzat.</li>
+                <li><span className="font-semibold">Refusat:</span> L'empresa ha declinat la proposta de patrocini.</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h3 className="font-semibold text-slate-700 mt-4 mb-2">Tipus de Col·laboració</h3>
+             <ul className="list-disc list-inside space-y-1">
+                <li><span className="font-semibold">Econòmica:</span> El patrocinador realitza una aportació monetària directa.</li>
+                <li><span className="font-semibold">Difusió:</span> El patrocinador ajuda a promocionar el grup a través dels seus canals (xarxes socials, web, etc.).</li>
+            </ul>
+        </div>
+
         <p>
           Totes les dades es guarden de forma segura i automàtica.
         </p>
