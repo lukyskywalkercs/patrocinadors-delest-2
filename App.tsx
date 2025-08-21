@@ -8,6 +8,7 @@ import SponsorForm from './components/SponsorForm';
 import Modal from './components/ui/Modal';
 import { PlusIcon } from './components/icons/PlusIcon';
 import Button from './components/ui/Button';
+import Instructions from './components/Instructions';
 
 const getFirebaseErrorMessage = (error: unknown): string => {
   let message = "S'ha produït un error inesperat. Intenta-ho de nou més tard.";
@@ -156,6 +157,8 @@ const App: React.FC = () => {
             Afig Patrocinador
           </Button>
         </div>
+
+        <Instructions />
 
         <Filters
           searchTerm={searchTerm}

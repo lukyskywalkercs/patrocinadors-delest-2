@@ -49,7 +49,7 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
                         <h3 className="text-lg font-bold text-slate-900">{sponsor.nombre}</h3>
-                        <p className="text-sm text-slate-500">{sponsor.email || ''}</p>
+                        <p className="text-sm text-slate-500 truncate">{sponsor.email || ''}</p>
                          {sponsor.web && (
                             <a 
                                 href={sponsor.web.startsWith('http') ? sponsor.web : `https://${sponsor.web}`} 
@@ -99,17 +99,32 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
                     )}
                 </div>
 
-                <div className="flex items-center justify-end space-x-4 pt-4 mt-4 border-t border-slate-200">
+                <div className="flex items-center justify-end flex-wrap gap-2 pt-4 mt-4 border-t border-slate-200">
                     {sponsor.estat !== 'refusat' && (
-                        <button onClick={() => onRefuse(sponsor.id)} className="text-slate-500 hover:text-orange-600 transition-colors" title="Marcar com a refusat">
-                            <RefuseIcon className="w-5 h-5" />
+                        <button 
+                            onClick={() => onRefuse(sponsor.id)} 
+                            className="inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-slate-600 transition-colors hover:text-orange-700 hover:bg-orange-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 px-3 py-1.5"
+                            aria-label="Marcar com a refusat"
+                        >
+                            <RefuseIcon className="w-4 h-4" />
+                            <span>Refusar</span>
                         </button>
                     )}
-                    <button onClick={() => onEdit(sponsor)} className="text-slate-500 hover:text-indigo-600 transition-colors" title="Editar patrocinador">
-                        <EditIcon className="w-5 h-5" />
+                    <button 
+                        onClick={() => onEdit(sponsor)} 
+                        className="inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-slate-600 transition-colors hover:text-indigo-700 hover:bg-indigo-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 px-3 py-1.5"
+                        aria-label="Editar patrocinador"
+                    >
+                        <EditIcon className="w-4 h-4" />
+                        <span>Editar</span>
                     </button>
-                    <button onClick={() => onDelete(sponsor.id)} className="text-slate-500 hover:text-red-600 transition-colors" title="Eliminar patrocinador">
-                        <DeleteIcon className="w-5 h-5" />
+                    <button 
+                        onClick={() => onDelete(sponsor.id)} 
+                        className="inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-slate-600 transition-colors hover:text-red-700 hover:bg-red-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 px-3 py-1.5"
+                        aria-label="Eliminar patrocinador"
+                    >
+                        <DeleteIcon className="w-4 h-4" />
+                        <span>Eliminar</span>
                     </button>
                 </div>
             </Card>
