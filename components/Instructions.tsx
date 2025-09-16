@@ -27,8 +27,10 @@ const Instructions: React.FC = () => {
             <ul className="list-disc list-inside space-y-1">
                 <li><span className="font-semibold">Proposta:</span> Una empresa o contacte que tenim pendent contactar.</li>
                 <li><span className="font-semibold">Pendent:</span> Ja s'ha contactat i estem esperant una resposta.</li>
+                <li><span className="font-semibold">Seguiment:</span> Han respost, però cal contactar-los de nou més endavant.</li>
                 <li><span className="font-semibold">Confirmat:</span> El patrocini ha sigut acceptat i formalitzat.</li>
                 <li><span className="font-semibold">Refusat:</span> L'empresa ha declinat la proposta de patrocini.</li>
+                <li><span className="font-semibold">Sense Resposta:</span> Després de contactar, no s'ha rebut resposta en un temps prudencial.</li>
             </ul>
         </div>
         

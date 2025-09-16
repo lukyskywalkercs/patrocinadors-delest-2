@@ -22,6 +22,10 @@ const getStatusClasses = (status: Sponsor['estat']) => {
             return 'bg-yellow-100 text-yellow-800';
         case 'refusat':
             return 'bg-red-100 text-red-800';
+        case 'seguiment':
+            return 'bg-cyan-100 text-cyan-800';
+        case 'sense resposta':
+            return 'bg-slate-200 text-slate-800';
         default:
             return 'bg-slate-100 text-slate-800';
     }

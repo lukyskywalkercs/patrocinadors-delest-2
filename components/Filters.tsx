@@ -23,8 +23,10 @@ const statusFilterOptions = [
     { label: 'Tots', value: 'tots' },
     { label: 'Propostes', value: 'proposta' },
     { label: 'Pendents', value: 'pendent' },
+    { label: 'Seguiment', value: 'seguiment' },
     { label: 'Confirmats', value: 'confirmat' },
     { label: 'Refusats', value: 'refusat' },
+    { label: 'Sense Resposta', value: 'sense resposta' },
   ];
 
 const Filters: React.FC<FiltersProps> = ({ searchTerm, setSearchTerm, filterType, setFilterType, filterStatus, setFilterStatus }) => {

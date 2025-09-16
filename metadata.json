@@ -1,5 +1,5 @@
 {
-  "name": "Delest Sponsor Manager",
+  "name": "Delest Sponsor Manager OK",
   "description": "A web application to manage sponsors for the band Delest. It allows for full CRUD operations, filtering, and searching of sponsor data stored in Firebase Firestore.",
   "requestFramePermissions": []
 }

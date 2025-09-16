@@ -25,8 +25,10 @@ const aportacionOptions = [
 const statusOptions = [
     { value: 'proposta', title: 'Proposta', description: 'Idea per a contactar.' },
     { value: 'pendent', title: 'Pendent', description: 'Contactat, esperant resposta.' },
+    { value: 'seguiment', title: 'Seguiment', description: 'Contactar de nou més endavant.' },
     { value: 'confirmat', title: 'Confirmat', description: 'Compromís formalitzat.' },
     { value: 'refusat', title: 'Refusat', description: 'Ha declinat el patrocini.' },
+    { value: 'sense resposta', title: 'Sense Resposta', description: 'No ha contestat en un temps.' },
 ];
 
 const contactMethodOptions: { id: ContactMethod, label: string }[] = [
