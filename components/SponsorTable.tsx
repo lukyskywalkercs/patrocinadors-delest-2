@@ -1,15 +1,18 @@
 import React from 'react';
-import type { Sponsor } from '../types';
+import type { Sponsor, SortableSponsorKeys } from '../types';
 import { EditIcon } from './icons/EditIcon';
 import { DeleteIcon } from './icons/DeleteIcon';
 import { RefuseIcon } from './icons/RefuseIcon';
 import Card from './ui/Card';
+import { SortIcon } from './icons/SortIcon';
 
 interface SponsorTableProps {
   sponsors: Sponsor[];
   onEdit: (sponsor: Sponsor) => void;
   onDelete: (id: string) => void;
   onRefuse: (id: string) => void;
+  onSort: (key: SortableSponsorKeys) => void;
+  sortConfig: { key: SortableSponsorKeys, direction: 'asc' | 'desc' } | null;
 }
 
 const getStatusClasses = (status: Sponsor['estat']) => {
@@ -32,7 +35,7 @@ const getStatusClasses = (status: Sponsor['estat']) => {
 };
 
 
-const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete, onRefuse }) => {
+const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete, onRefuse, onSort, sortConfig }) => {
   if (sponsors.length === 0) {
     return (
       <Card>
@@ -41,6 +44,18 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
           <p className="text-slate-500 mt-1">Intenta ajustar la teua cerca o afig un nou patrocinador.</p>
         </div>
       </Card>
+    );
+  }
+
+  const SortableHeader: React.FC<{ children: React.ReactNode, columnKey: SortableSponsorKeys }> = ({ children, columnKey }) => {
+    const direction = sortConfig?.key === columnKey ? sortConfig.direction : undefined;
+    return (
+        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <button onClick={() => onSort(columnKey)} className="flex items-center gap-1.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 rounded-sm px-1 -ml-1">
+                {children}
+                <SortIcon direction={direction} />
+            </button>
+        </th>
     );
   }
 
@@ -141,10 +156,15 @@ const SponsorTable: React.FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete,
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50">
                     <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/3">Patrocinador</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Estat</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Col·laboració</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Contacte</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/3">
+                            <button onClick={() => onSort('nombre')} className="flex items-center gap-1.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 rounded-sm px-1 -ml-1">
+                                Patrocinador
+                                <SortIcon direction={sortConfig?.key === 'nombre' ? sortConfig.direction : undefined} />
+                            </button>
+                        </th>
+                        <SortableHeader columnKey="estat">Estat</SortableHeader>
+                        <SortableHeader columnKey="tipoColaboracion">Col·laboració</SortableHeader>
+                        <SortableHeader columnKey="contactMethods">Contacte</SortableHeader>
                         <th scope="col" className="relative px-6 py-3">
                         <span className="sr-only">Accions</span>
                         </th>

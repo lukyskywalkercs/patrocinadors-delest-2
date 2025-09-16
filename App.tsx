@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import type { Sponsor, TipoColaboracion, SponsorStatus } from './types';
+import type { Sponsor, TipoColaboracion, SponsorStatus, SortableSponsorKeys } from './types';
 import { getSponsors, addSponsor, updateSponsor, deleteSponsor } from './services/sponsorService';
 import Header from './components/Header';
 import Filters from './components/Filters';
@@ -42,6 +42,8 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'tots' | TipoColaboracion>('tots');
   const [filterStatus, setFilterStatus] = useState<'tots' | SponsorStatus>('tots');
+  const [sortConfig, setSortConfig] = useState<{ key: SortableSponsorKeys, direction: 'asc' | 'desc' }>({ key: 'nombre', direction: 'asc' });
+
 
   const fetchSponsors = useCallback(async () => {
     try {
@@ -122,8 +124,16 @@ const App: React.FC = () => {
     }
   };
 
-  const filteredSponsors = useMemo(() => {
-    return sponsors
+  const requestSort = (key: SortableSponsorKeys) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const processedSponsors = useMemo(() => {
+    const filtered = sponsors
       .filter(sponsor => {
         if (filterType === 'tots') return true;
         return sponsor.tipoColaboracion === filterType;
@@ -135,7 +145,36 @@ const App: React.FC = () => {
       .filter(sponsor => 
         sponsor.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       );
-  }, [sponsors, searchTerm, filterType, filterStatus]);
+
+      const sorted = [...filtered].sort((a, b) => {
+        const { key, direction } = sortConfig;
+        
+        let valA: any;
+        let valB: any;
+
+        if (key === 'contactMethods') {
+            valA = a.contactMethods?.length ?? 0;
+            valB = b.contactMethods?.length ?? 0;
+        } else {
+            valA = a[key];
+            valB = b[key];
+        }
+
+        if (valA === null || valA === undefined) return 1;
+        if (valB === null || valB === undefined) return -1;
+        
+        let comparison = 0;
+        if (typeof valA === 'number' && typeof valB === 'number') {
+            comparison = valA - valB;
+        } else {
+            comparison = String(valA).localeCompare(String(valB));
+        }
+
+        return direction === 'asc' ? comparison : -comparison;
+    });
+
+    return sorted;
+  }, [sponsors, searchTerm, filterType, filterStatus, sortConfig]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -177,10 +216,12 @@ const App: React.FC = () => {
           </div>
         ) : (
           <SponsorTable
-            sponsors={filteredSponsors}
+            sponsors={processedSponsors}
             onEdit={handleEditSponsor}
             onDelete={handleDeleteSponsor}
             onRefuse={handleRefuseSponsor}
+            onSort={requestSort}
+            sortConfig={sortConfig}
           />
         )}
       </main>
